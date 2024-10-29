@@ -1,26 +1,17 @@
-# Specify the platform and architecture
 ARG TARGETOS=linux
 ARG TARGETARCH=arm64
-
-# Use Ubuntu 20.04 as the base image for arm64 architecture
-FROM --platform=$TARGETOS/$TARGETARCH ubuntu:20.04
+FROM --platform=$TARGETOS/$TARGETARCH python:3.10-slim-bookworm
 
 LABEL author="klldFN" maintainer="klld@klldFn.xyz"
 
-RUN apt update && apt install -y \
-    python3 \
-    python3-pip \
-    git \
-    gcc \
-    g++ \
-    ca-certificates \
-    dnsutils \
-    curl \
-    iproute2 \
-    ffmpeg \
-    procps \
-    dumb-init \
-    && useradd -m -d /home/container container
+RUN apt update \
+    && apt -y install git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps \
+    && apt install -y dumb-init \
+    && useradd -m -d /home/container container \
+    && useradd -m -d /home/klldFN klldFN \
+    && mkdir -p /home/klldFN /home/container \
+    && chown -R container:container /home/container \
+    && chown -R klldFN:klldFN /home/klldFN
 
 USER container
 ENV USER=container HOME=/home/container
@@ -28,10 +19,8 @@ WORKDIR /home/container
 
 STOPSIGNAL SIGINT
 
-# Copy the entrypoint script and make it executable
-COPY --chown=container:container ./entrypoint.sh /entrypoint.sh
+COPY --chown=container:container ./../entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Use dumb-init as the entrypoint
-ENTRYPOINT ["dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["/entrypoint.sh"]
