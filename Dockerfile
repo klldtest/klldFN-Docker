@@ -1,5 +1,5 @@
 ARG TARGETOS=linux
-ARG TARGETARCH=arm64
+ARG TARGETARCH=amd64
 FROM --platform=$TARGETOS/$TARGETARCH python:3.10-slim-bookworm
 
 LABEL author="klldFN" maintainer="klld@klldFn.xyz"
