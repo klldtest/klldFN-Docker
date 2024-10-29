@@ -6,8 +6,7 @@ LABEL       author="klldFN" maintainer="klld@klldFn.xyz"
 
 
 RUN apt update && apt install -y git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps \
-    && curl -Lo /usr/bin/tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-arm64 \
-    && chmod +x /usr/bin/tini \
+    && apt install -y dumb-init \
     && useradd -m -d /home/container container
 
 # Set environment variables and working directory for the container user
@@ -22,5 +21,5 @@ COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
 
 # Use tini as the entrypoint
-ENTRYPOINT  ["tini", "-g", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 CMD         ["/entrypoint.sh"]
