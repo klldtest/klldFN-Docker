@@ -12,8 +12,8 @@ RUN apt update \
     && chown -R container:container /home/container \
     && chown -R klldFN:klldFN /home/klldFN
 
-RUN wget http://ftp.us.debian.org/debian/pool/main/d/dumb-init/dumb-init_1.2.0-1_armhf.deb && \
-    dpkg -i dumb-init_1.2.0-1_armhf.deb
+RUN wget http://ftp.us.debian.org/debian/pool/main/d/dumb-init/dumb-init_1.2.5-1_arm64.deb && \
+    dpkg -i dumb-init_1.2.5-1_arm64.deb
 
 USER container
 ENV USER=container HOME=/home/container
