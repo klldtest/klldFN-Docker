@@ -5,15 +5,15 @@ FROM --platform=$TARGETOS/$TARGETARCH python:3.9-slim-bookworm
 LABEL author="klldFN" maintainer="klld@klldFN.xyz"
 
 RUN apt update \
-    && apt -y install git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps dumb-init wget \
+    && apt -y install git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps wget \
     && useradd -m -d /home/container container \
     && useradd -m -d /home/klldFN klldFN \
     && mkdir -p /home/klldFN /home/container \
     && chown -R container:container /home/container \
     && chown -R klldFN:klldFN /home/klldFN
 
-RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64
-RUN chmod +x /usr/local/bin/dumb-init
+RUN wget http://ftp.us.debian.org/debian/pool/main/d/dumb-init/dumb-init_1.2.0-1_armhf.deb && \
+    dpkg -i dumb-init_1.2.0-1_armhf.deb
 
 USER container
 ENV USER=container HOME=/home/container
